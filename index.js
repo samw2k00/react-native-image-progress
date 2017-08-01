@@ -32,6 +32,7 @@ export const createImageProgress = ImageComponent =>
       indicatorContainerStyle: styles.centered,
       errorContainerStyle: styles.centered,
       threshold: 50,
+      viewWrapperStyle: null
     };
 
     static prefetch = Image.prefetch;
