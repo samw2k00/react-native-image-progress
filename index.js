@@ -24,6 +24,7 @@ export const createImageProgress = ImageComponent =>
       renderError: PropTypes.func,
       source: PropTypes.any,
       style: PropTypes.any,
+      viewWrapperStyle: PropTypes.any,
       threshold: PropTypes.number.isRequired,
     };
 
@@ -191,7 +192,7 @@ export const createImageProgress = ImageComponent =>
       }
 
       return (
-        <View style={style} ref={this.handleRef}>
+        <View style={[style, viewWrapperStyle && viewWrapperStyle]} ref={this.handleRef}>
           <ImageComponent
             {...props}
             key={source && source.uri}
