@@ -25,6 +25,7 @@ export const createImageProgress = ImageComponent =>
       source: PropTypes.any,
       style: PropTypes.any,
       threshold: PropTypes.number.isRequired,
+      imageBorderRadius: PropTypes.any
     };
 
     static defaultProps = {
@@ -149,6 +150,7 @@ export const createImageProgress = ImageComponent =>
         source,
         style,
         threshold,
+        imageBorderRadius,
         ...props
       } = this.props;
 
@@ -200,7 +202,7 @@ export const createImageProgress = ImageComponent =>
             onError={this.handleError}
             onLoad={this.handleLoad}
             source={source}
-            style={[StyleSheet.absoluteFill, style]}
+            style={[StyleSheet.absoluteFill, imageBorderRadius]}
           />
           {indicatorElement}
           {children}
@@ -210,3 +212,4 @@ export const createImageProgress = ImageComponent =>
   };
 
 export default createImageProgress(Image);
+  
