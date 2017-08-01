@@ -24,15 +24,13 @@ export const createImageProgress = ImageComponent =>
       renderError: PropTypes.func,
       source: PropTypes.any,
       style: PropTypes.any,
-      viewWrapperStyle: PropTypes.any,
       threshold: PropTypes.number.isRequired,
     };
 
     static defaultProps = {
       indicatorContainerStyle: styles.centered,
       errorContainerStyle: styles.centered,
-      threshold: 50,
-      viewWrapperStyle: null
+      threshold: 50
     };
 
     static prefetch = Image.prefetch;
@@ -193,7 +191,7 @@ export const createImageProgress = ImageComponent =>
       }
 
       return (
-        <View style={[style, viewWrapperStyle && viewWrapperStyle]} ref={this.handleRef}>
+        <View style={style} ref={this.handleRef}>
           <ImageComponent
             {...props}
             key={source && source.uri}
@@ -202,7 +200,7 @@ export const createImageProgress = ImageComponent =>
             onError={this.handleError}
             onLoad={this.handleLoad}
             source={source}
-            style={StyleSheet.absoluteFill}
+            style={[StyleSheet.absoluteFill, style]}
           />
           {indicatorElement}
           {children}
