@@ -25,13 +25,15 @@ export const createImageProgress = ImageComponent =>
       source: PropTypes.any,
       style: PropTypes.any,
       threshold: PropTypes.number.isRequired,
-      imageBorderRadius: PropTypes.any
+      imageBorderRadius: PropTypes.any,
+      resizable: PropTypes.bool
     };
 
     static defaultProps = {
       indicatorContainerStyle: styles.centered,
       errorContainerStyle: styles.centered,
-      threshold: 50
+      threshold: 50,
+      resizable: false
     };
 
     static prefetch = Image.prefetch;
@@ -193,7 +195,7 @@ export const createImageProgress = ImageComponent =>
       }
 
       return (
-        <View style={style} ref={this.handleRef}>
+        <View style={[style, (this.state.error && this.props.resizable ) && {height:200}]} ref={this.handleRef}>
           <ImageComponent
             {...props}
             key={source && source.uri}
