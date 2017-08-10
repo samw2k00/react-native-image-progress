@@ -47,6 +47,7 @@ export const createImageProgress = ImageComponent =>
         loading: false,
         progress: 0,
         thresholdReached: !props.threshold,
+        errorRetryAttempts:0
       };
     }
 
@@ -125,8 +126,9 @@ export const createImageProgress = ImageComponent =>
       this.setState({
         loading: false,
         error: event.nativeEvent,
+        errorRetryAttempts: this.state.errorRetryAttempts+1
       });
-      this.bubbleEvent('onError', event);
+      this.bubbleEvent('onError', {event, errorRetryAttempts: this.state.errorRetryAttempts});
     };
 
     handleLoad = event => {
