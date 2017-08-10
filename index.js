@@ -47,7 +47,7 @@ export const createImageProgress = ImageComponent =>
         loading: false,
         progress: 0,
         thresholdReached: !props.threshold,
-        errorRetryAttempts:0
+        errorRetryAttempts: 0
       };
     }
 
@@ -72,6 +72,10 @@ export const createImageProgress = ImageComponent =>
           progress: 0,
         });
       }
+      this.setState({
+        error: props.cacheError
+      })
+
     }
 
     componentWillUnmount() {
@@ -126,9 +130,9 @@ export const createImageProgress = ImageComponent =>
       this.setState({
         loading: false,
         error: event.nativeEvent,
-        errorRetryAttempts: this.state.errorRetryAttempts+1
+        errorRetryAttempts: this.state.errorRetryAttempts + 1
       });
-      this.bubbleEvent('onError', {event, errorRetryAttempts: this.state.errorRetryAttempts});
+      this.bubbleEvent('onError', { event, errorRetryAttempts: this.state.errorRetryAttempts });
     };
 
     handleLoad = event => {
@@ -141,6 +145,7 @@ export const createImageProgress = ImageComponent =>
       }
       this.bubbleEvent('onLoad', event);
     };
+
 
     render() {
       const {
@@ -155,10 +160,12 @@ export const createImageProgress = ImageComponent =>
         style,
         threshold,
         imageBorderRadius,
+        cacheError,
         ...props
       } = this.props;
 
-      if (!source || !source.uri) {
+
+      if (!source || !source.uri && !cacheError) {
         // This is not a networked asset so fallback to regular image
         return (
           <ImageComponent source={source} style={style} {...props}>
@@ -169,7 +176,6 @@ export const createImageProgress = ImageComponent =>
       const { progress, thresholdReached, loading, error } = this.state;
 
       let indicatorElement;
-
       if (error) {
         if (renderError) {
           indicatorElement = (
@@ -197,7 +203,7 @@ export const createImageProgress = ImageComponent =>
       }
 
       return (
-        <View style={[style, (this.state.error && this.props.resizable ) && {height:200}]} ref={this.handleRef}>
+        <View style={[style, (this.state.error && this.props.resizable) && { height: 200 }]} ref={this.handleRef}>
           <ImageComponent
             {...props}
             key={source && source.uri}
@@ -216,4 +222,3 @@ export const createImageProgress = ImageComponent =>
   };
 
 export default createImageProgress(Image);
-  
