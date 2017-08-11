@@ -26,7 +26,7 @@ export const createImageProgress = ImageComponent =>
       style: PropTypes.any,
       threshold: PropTypes.number.isRequired,
       imageBorderRadius: PropTypes.any,
-      resizable: PropTypes.bool
+      resizable: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -72,8 +72,11 @@ export const createImageProgress = ImageComponent =>
           progress: 0,
         });
       }
+      if(props.cacheLoading){
+        this.handleLoadStart()
+      }
       this.setState({
-        error: props.cacheError
+        error: props.cacheLoading ? null : props.cacheError,
       })
 
     }
@@ -161,6 +164,7 @@ export const createImageProgress = ImageComponent =>
         threshold,
         imageBorderRadius,
         cacheError,
+        cacheLoading,
         ...props
       } = this.props;
 
@@ -174,7 +178,6 @@ export const createImageProgress = ImageComponent =>
         );
       }
       const { progress, thresholdReached, loading, error } = this.state;
-
       let indicatorElement;
       if (error) {
         if (renderError) {
@@ -201,7 +204,6 @@ export const createImageProgress = ImageComponent =>
           <View style={indicatorContainerStyle}>{indicatorElement}</View>
         );
       }
-
       return (
         <View style={[style, (this.state.error && this.props.resizable) && { height: 200 }]} ref={this.handleRef}>
           <ImageComponent
