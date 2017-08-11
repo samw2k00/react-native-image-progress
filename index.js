@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { ActivityIndicator, Image, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, View, Text } from 'react-native';
 
 const styles = StyleSheet.create({
   centered: {
@@ -27,13 +27,15 @@ export const createImageProgress = ImageComponent =>
       threshold: PropTypes.number.isRequired,
       imageBorderRadius: PropTypes.any,
       resizable: PropTypes.bool,
+      cacheLoading: PropTypes.bool
     };
 
     static defaultProps = {
       indicatorContainerStyle: styles.centered,
       errorContainerStyle: styles.centered,
       threshold: 50,
-      resizable: false
+      resizable: false,
+      cacheLoading: true
     };
 
     static prefetch = Image.prefetch;
@@ -72,11 +74,8 @@ export const createImageProgress = ImageComponent =>
           progress: 0,
         });
       }
-      if(props.cacheLoading){
-        this.handleLoadStart()
-      }
       this.setState({
-        error: props.cacheLoading ? null : props.cacheError,
+        error: props.cacheError,
       })
 
     }
@@ -168,27 +167,31 @@ export const createImageProgress = ImageComponent =>
         ...props
       } = this.props;
 
-
-      if (!source || !source.uri && !cacheError) {
+      if (typeof source !== 'object') {
         // This is not a networked asset so fallback to regular image
-        return (
-          <ImageComponent source={source} style={style} {...props}>
-            {children}
-          </ImageComponent>
-        );
+        // the cache set the source to {} for network request
+          return (
+            <ImageComponent source={source} style={style} {...props}>
+              {children}
+            </ImageComponent>
+          );
       }
       const { progress, thresholdReached, loading, error } = this.state;
       let indicatorElement;
-      if (error) {
+
+      if (error) { // todo && !(error.statusCode == 401 && error.attempts == 1)
         if (renderError) {
+          // error occurred - show "no image found" image
           indicatorElement = (
             <View style={errorContainerStyle}>{renderError(error)}</View>
           );
         }
-      } else if ((loading || progress < 1) && thresholdReached) {
+      } else if ((cacheLoading || loading || progress < 1) && thresholdReached) {
+        // "loading in progress"
         if (renderIndicator) {
           indicatorElement = renderIndicator(progress, !loading || !progress);
         } else {
+          // "spinner"
           const IndicatorComponent = typeof indicator === 'function'
             ? indicator
             : DefaultIndicator;
