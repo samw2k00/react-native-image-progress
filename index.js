@@ -219,7 +219,7 @@ export const createImageProgress = ImageComponent =>
             source={source}
             style={[StyleSheet.absoluteFill, imageBorderRadius]}
           />
-          {!source.uri && indicatorElement}
+          {indicatorElement}
           {children}
         </View>
       );
