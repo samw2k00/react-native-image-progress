@@ -77,7 +77,6 @@ export const createImageProgress = ImageComponent =>
       this.setState({
         error: props.cacheError,
       })
-
     }
 
     componentWillUnmount() {
@@ -178,7 +177,7 @@ export const createImageProgress = ImageComponent =>
       }
       const { progress, thresholdReached, loading, error } = this.state;
       let indicatorElement;
-
+      
       if (error) { // todo && !(error.statusCode == 401 && error.attempts == 1)
         if (renderError) {
           // error occurred - show "no image found" image
@@ -209,17 +208,17 @@ export const createImageProgress = ImageComponent =>
       }
       return (
         <View style={[style, (this.state.error && this.props.resizable) && { height: 200 }]} ref={this.handleRef}>
-          <ImageComponent
-            {...props}
-            key={source && source.uri}
-            onLoadStart={this.handleLoadStart}
-            onProgress={this.handleProgress}
-            onError={this.handleError}
-            onLoad={this.handleLoad}
-            source={source}
-            style={[StyleSheet.absoluteFill, imageBorderRadius]}
-          />
           {indicatorElement}
+          {!error && <ImageComponent
+          {...props}
+          key={source && source.uri}
+          onLoadStart={this.handleLoadStart}
+          onProgress={this.handleProgress}
+          onError={this.handleError}
+          onLoad={this.handleLoad}
+          source={source}
+          style={[StyleSheet.absoluteFill, imageBorderRadius]}/>}
+          
           {children}
         </View>
       );
